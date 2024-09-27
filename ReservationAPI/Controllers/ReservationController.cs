@@ -43,5 +43,13 @@ namespace ReservationAPI.Controllers
             return Ok(new { message = "Reservation deleted." });
         }
 
+        // Check reservation
+        [HttpGet("{id}")]
+        public IActionResult CheckReservation(int id)
+        {
+            var exists = _reservations.Any(r => r.BookID == id);
+            return Ok(new { reserved = exists });
+        }
+
     }
 }
