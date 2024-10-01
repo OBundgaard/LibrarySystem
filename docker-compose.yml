@@ -10,7 +10,7 @@ services:
       - "1433:1433"
     volumes:
       - ./data:/var/opt/mssql/data
-  api:
+  reservationapi:
     build:
       context: .
       dockerfile: ReservationAPI/Dockerfile
