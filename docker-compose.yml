@@ -1,0 +1,21 @@
+name: "library-system"
+
+services:
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: iLuvBooks4ever<3
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./data:/var/opt/mssql/data
+  api:
+    build:
+      context: .
+      dockerfile: ReservationAPI/Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    depends_on:
+      - database
