@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Monitoring;
 
 namespace ReservationAPI.Controllers
 {
@@ -21,11 +20,9 @@ namespace ReservationAPI.Controllers
         [HttpPost("post/{id}")]
         public async Task<IActionResult> CreateReservation(int id)
         {
-            MonitorService.Log.Debug($"Creating reservation for BookID {id}.");
             // Reservation must not exist already
             if (await _context.Reservations.AnyAsync(r => r.RsvBookID == id))
             {
-                MonitorService.Log.Error("Book is already reserved");
                 return Conflict(new { message = "Book is already reserved" });
             }
 
@@ -40,7 +37,6 @@ namespace ReservationAPI.Controllers
             _context.Reservations.Add(reservation);
             await _context.SaveChangesAsync();
 
-            MonitorService.Log.Information("Reservation created.");
             return Ok(reservation);
         }
 
@@ -48,12 +44,10 @@ namespace ReservationAPI.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteReservation(int id) 
         {
-            MonitorService.Log.Debug($"Deleting reservation for BookID {id}.");
             // Reservation must exist
             var reservation = await _context.Reservations.FirstOrDefaultAsync(r => r.RsvBookID == id);
             if (reservation == null)
             {
-                MonitorService.Log.Error("Reservation not found.");
                 return NotFound(new { message = "Reservation not found." });
             }
 
@@ -61,7 +55,6 @@ namespace ReservationAPI.Controllers
             _context.Reservations.Remove(reservation);
             await _context.SaveChangesAsync();
 
-            MonitorService.Log.Information("Reservation deleted.");
             return Ok(new { message = "Reservation deleted." });
         }
 
@@ -69,11 +62,9 @@ namespace ReservationAPI.Controllers
         [HttpGet("get/{id}")]
         public async Task<IActionResult> CheckReservation(int id)
         {
-            MonitorService.Log.Debug($"Checking reservation for BookID {id}.");
             // Check if the reservation exists
             var exists = await _context.Reservations.AnyAsync(r => r.RsvBookID == id);
 
-            MonitorService.Log.Information($"Reservation with BookID {id} found: {exists}.");
             return Ok(new { reserved = exists });
         }
 

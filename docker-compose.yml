@@ -14,24 +14,17 @@ services:
     build:
       context: .
       dockerfile: ReservationAPI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=5000
+      - ASPNETCORE_HTTPS_PORTS=5001
     ports:
       - "5000:5000"
       - "5001:5001"
     depends_on:
       - database
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     # deploy:
     #   replicas: 2
-  seq:
-    image: datalust/seq:latest
-    ports:
-      - "5341:5341"
-      - "5342:80"
-    volumes:
-      - seq-data:/data
-    depends_on:
-      - reservationapi
-    environment:
-      ACCEPT_EULA: "Y"
-
-volumes:
-  seq-data:
