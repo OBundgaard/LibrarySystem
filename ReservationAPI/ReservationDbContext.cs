@@ -12,14 +12,14 @@ namespace ReservationAPI
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Reservation>().HasKey(r => r.BookID);
+            modelBuilder.Entity<Reservation>().HasKey(r => r.RsvBookID);
         }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                return base.SaveChangesAsync(cancellationToken);
+                return await base.SaveChangesAsync(cancellationToken);
             }
             catch (DbUpdateException ex)
             {

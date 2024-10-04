@@ -21,14 +21,14 @@ namespace ReservationAPI.Controllers
         public async Task<IActionResult> CreateReservation(int id)
         {
             // Reservation must not exist already
-            if (await _context.Reservations.AnyAsync(r => r.BookID == id))
+            if (await _context.Reservations.AnyAsync(r => r.RsvBookID == id))
                 return Conflict(new { message = "Book is already reserved" });
 
             // Create reservation
             Reservation reservation = new Reservation 
-            { 
-                BookID = id,
-                ReservedAt = DateTime.Now
+            {
+                RsvBookID = id,
+                RsvReservedAt = DateTime.Now
             };
 
             // Add the reservation and save changes
@@ -43,7 +43,7 @@ namespace ReservationAPI.Controllers
         public async Task<IActionResult> DeleteReservation(int id) 
         {
             // Reservation must exist
-            var reservation = await _context.Reservations.FirstOrDefaultAsync(r => r.BookID == id);
+            var reservation = await _context.Reservations.FirstOrDefaultAsync(r => r.RsvBookID == id);
             if (reservation == null)
             {
                 return NotFound(new { message = "Reservation not found." });
@@ -61,7 +61,7 @@ namespace ReservationAPI.Controllers
         public async Task<IActionResult> CheckReservation(int id)
         {
             // Check if the reservation exists
-            var exists = await _context.Reservations.AnyAsync(r => r.BookID == id);
+            var exists = await _context.Reservations.AnyAsync(r => r.RsvBookID == id);
 
             return Ok(new { reserved = exists });
         }

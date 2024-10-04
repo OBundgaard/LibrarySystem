@@ -2,7 +2,7 @@
 {
     public class Reservation
     {
-        public int BookID { get; set; }
-        public DateTime ReservedAt { get; set; }
+        public int RsvBookID { get; set; }
+        public DateTime RsvReservedAt { get; set; }
     }
 }
