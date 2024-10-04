@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Monitoring;
 
 namespace ReservationAPI.Controllers
 {
@@ -20,9 +21,13 @@ namespace ReservationAPI.Controllers
         [HttpPost("post/{id}")]
         public async Task<IActionResult> CreateReservation(int id)
         {
+            MonitorService.Log.Debug($"Creating reservation for BookID {id}.");
             // Reservation must not exist already
             if (await _context.Reservations.AnyAsync(r => r.RsvBookID == id))
+            {
+                MonitorService.Log.Error("Book is already reserved");
                 return Conflict(new { message = "Book is already reserved" });
+            }
 
             // Create reservation
             Reservation reservation = new Reservation 
@@ -42,10 +47,12 @@ namespace ReservationAPI.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteReservation(int id) 
         {
+            MonitorService.Log.Debug($"Deleting reservation for BookID {id}.");
             // Reservation must exist
             var reservation = await _context.Reservations.FirstOrDefaultAsync(r => r.RsvBookID == id);
             if (reservation == null)
             {
+                MonitorService.Log.Error("Reservation not found.");
                 return NotFound(new { message = "Reservation not found." });
             }
 
@@ -62,7 +69,7 @@ namespace ReservationAPI.Controllers
         {
             // Check if the reservation exists
             var exists = await _context.Reservations.AnyAsync(r => r.RsvBookID == id);
-
+            MonitorService.Log.Warning($"Reservation with BookID {id} found: {exists}.");
             return Ok(new { reserved = exists });
         }
 

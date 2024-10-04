@@ -19,3 +19,19 @@ services:
       - "5001:5001"
     depends_on:
       - database
+    # deploy:
+    #   replicas: 2
+  seq:
+    image: datalust/seq:latest
+    ports:
+      - "5341:5341"
+      - "5342:80"
+    volumes:
+      - seq-data:/data
+    depends_on:
+      - reservationapi
+    environment:
+      ACCEPT_EULA: "Y"
+
+volumes:
+  seq-data:
