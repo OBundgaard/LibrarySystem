@@ -13,12 +13,9 @@ public class ReservationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Reservation>()
-        .HasKey(r => r.RsvBookID);
+        modelBuilder.Entity<Reservation>().HasKey(r => r.RsvBookID);
 
-        modelBuilder.Entity<Reservation>()
-            .Property(r => r.RsvBookID)
-            .ValueGeneratedOnAdd();
+        modelBuilder.Entity<Reservation>().Property(r => r.RsvBookID).ValueGeneratedNever();
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
