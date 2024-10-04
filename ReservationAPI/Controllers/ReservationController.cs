@@ -40,6 +40,7 @@ namespace ReservationAPI.Controllers
             _context.Reservations.Add(reservation);
             await _context.SaveChangesAsync();
 
+            MonitorService.Log.Information("Reservation created.");
             return Ok(reservation);
         }
 
@@ -60,6 +61,7 @@ namespace ReservationAPI.Controllers
             _context.Reservations.Remove(reservation);
             await _context.SaveChangesAsync();
 
+            MonitorService.Log.Information("Reservation deleted.");
             return Ok(new { message = "Reservation deleted." });
         }
 
@@ -67,9 +69,11 @@ namespace ReservationAPI.Controllers
         [HttpGet("get/{id}")]
         public async Task<IActionResult> CheckReservation(int id)
         {
+            MonitorService.Log.Debug($"Checking reservation for BookID {id}.");
             // Check if the reservation exists
             var exists = await _context.Reservations.AnyAsync(r => r.RsvBookID == id);
-            MonitorService.Log.Warning($"Reservation with BookID {id} found: {exists}.");
+
+            MonitorService.Log.Information($"Reservation with BookID {id} found: {exists}.");
             return Ok(new { reserved = exists });
         }
 
