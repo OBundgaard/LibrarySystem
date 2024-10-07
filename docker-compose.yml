@@ -10,7 +10,7 @@ services:
       - "1433:1433"
     volumes:
       - ./data:/var/opt/mssql/data
-  reservationapi:
+  reservationapi-1:
     build:
       context: .
       dockerfile: ReservationAPI/Dockerfile
@@ -19,12 +19,24 @@ services:
       - ASPNETCORE_HTTP_PORTS=5000
       - ASPNETCORE_HTTPS_PORTS=5001
     ports:
-      - "5000:5000"
-      - "5001:5001"
+      - "8080:5000"
     depends_on:
       - database
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-    # deploy:
-    #   replicas: 2
+  reservationapi-2:
+    build:
+      context: .
+      dockerfile: ReservationAPI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=5002
+      - ASPNETCORE_HTTPS_PORTS=5003
+    ports:
+      - "8081:5002"
+    depends_on:
+      - database
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

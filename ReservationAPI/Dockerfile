@@ -6,6 +6,7 @@ USER app
 WORKDIR /app
 EXPOSE 5000
 EXPOSE 5001
+EXPOSE 5271
 
 
 # This stage is used to build the service project
